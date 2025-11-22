@@ -13,6 +13,8 @@
             --primary-dark: #1D4ED8;
             --secondary-color: #10B981;
             --secondary-bg: #DCFCE7;
+            --error-color: #EF4444;
+            --error-bg: #FEE2E2;
             --text-primary: #1E293B;
             --text-secondary: #64748B;
             --background-color: #F8FAFC;
@@ -53,6 +55,11 @@
             animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
+            display: none; /* Hidden by default */
+        }
+
+        .container.visible {
+            display: block;
         }
 
         @keyframes slideUp {
@@ -78,6 +85,10 @@
             animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s backwards;
         }
 
+        .icon-circle.error {
+            background-color: var(--error-bg);
+        }
+
         @keyframes scaleIn {
             from { transform: scale(0); }
             to { transform: scale(1); }
@@ -87,6 +98,15 @@
             width: 48px;
             height: 48px;
             color: var(--secondary-color);
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: drawCheck 0.6s ease-out 0.7s forwards;
+        }
+
+        .cross {
+            width: 48px;
+            height: 48px;
+            color: var(--error-color);
             stroke-dasharray: 100;
             stroke-dashoffset: 100;
             animation: drawCheck 0.6s ease-out 0.7s forwards;
@@ -160,10 +180,15 @@
             height: 6px;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
+        
+        .container.error-state::before {
+            background: linear-gradient(90deg, var(--error-color), #F87171);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Success Container -->
+    <div id="successContainer" class="container">
         <div class="icon-wrapper">
             <div class="icon-circle">
                 <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
@@ -175,7 +200,27 @@
         <h1>You're all set!</h1>
         <p>Your email has been verified successfully.<br>You can now sign in to your account.</p>
         
-        <button id="actionBtn" class="btn" onclick="handleAction()">Return to App</button>
+        <button id="successActionBtn" class="btn" onclick="handleAction()">Return to App</button>
+        
+        <div class="footer">
+            Jobbly &bull; Employee Hiring Platform
+        </div>
+    </div>
+
+    <!-- Error Container -->
+    <div id="errorContainer" class="container error-state">
+        <div class="icon-wrapper">
+            <div class="icon-circle error">
+                <svg class="cross" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </div>
+        </div>
+        
+        <h1>Link Expired</h1>
+        <p id="errorMessage">This verification link is invalid or has already been used. Please request a new one.</p>
+        
+        <button id="errorActionBtn" class="btn" onclick="handleAction()">Return to App</button>
         
         <div class="footer">
             Jobbly &bull; Employee Hiring Platform
@@ -201,14 +246,37 @@
             }
         }
 
-        // Update button text based on device
+        // Check for errors in URL
         window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hashParams = new URLSearchParams(window.location.hash.substring(1)); // Remove #
+            
+            const error = urlParams.get('error') || hashParams.get('error');
+            const errorDescription = urlParams.get('error_description') || hashParams.get('error_description');
+            
+            const successContainer = document.getElementById('successContainer');
+            const errorContainer = document.getElementById('errorContainer');
+            const errorMessage = document.getElementById('errorMessage');
+            
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             const isMobile = /android|iPad|iPhone|iPod/i.test(userAgent);
-            const btn = document.getElementById('actionBtn');
+            const btnText = isMobile ? "Return to App" : "Close Tab";
             
-            if (!isMobile) {
-                btn.textContent = "Close Tab";
+            document.getElementById('successActionBtn').textContent = btnText;
+            document.getElementById('errorActionBtn').textContent = btnText;
+
+            if (error) {
+                successContainer.classList.remove('visible');
+                errorContainer.classList.add('visible');
+                
+                if (errorDescription) {
+                    // Replace + with space and decode URI components
+                    let decodedDesc = decodeURIComponent(errorDescription.replace(/\+/g, ' '));
+                    errorMessage.textContent = decodedDesc;
+                }
+            } else {
+                errorContainer.classList.remove('visible');
+                successContainer.classList.add('visible');
             }
         };
     </script>
