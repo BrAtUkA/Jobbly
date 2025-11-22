@@ -175,11 +175,42 @@
         <h1>You're all set!</h1>
         <p>Your email has been verified successfully.<br>You can now sign in to your account.</p>
         
-        <button class="btn" onclick="window.close()">Return to App</button>
+        <button id="actionBtn" class="btn" onclick="handleAction()">Return to App</button>
         
         <div class="footer">
             Jobbly &bull; Employee Hiring Platform
         </div>
     </div>
+
+    <script>
+        function handleAction() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const isMobile = /android|iPad|iPhone|iPod/i.test(userAgent);
+            
+            if (isMobile) {
+                // Try to open the app using custom scheme
+                // Replace 'jobbly://' with your actual app scheme
+                window.location.href = 'jobbly://login';
+                
+                // Fallback if app is not installed (optional)
+                setTimeout(() => {
+                    // window.location.href = 'https://play.google.com/store/apps/details?id=com.example.jobbly';
+                }, 2000);
+            } else {
+                window.close();
+            }
+        }
+
+        // Update button text based on device
+        window.onload = function() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const isMobile = /android|iPad|iPhone|iPod/i.test(userAgent);
+            const btn = document.getElementById('actionBtn');
+            
+            if (!isMobile) {
+                btn.textContent = "Close Tab";
+            }
+        };
+    </script>
 </body>
 </html>
