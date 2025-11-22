@@ -1,0 +1,89 @@
+User:
+- user_id
+- email
+- password
+- userType
+- createdAt
+
+    Comapny extends User:
+    - companyId
+    - companyName
+    - description
+    - logoUrl
+    - website
+    - contactNo
+
+    Seeker extends User:
+    - fullName
+    - pfp
+    - resumeUrl
+    - experience
+    - education (Matric/Inter/BS/MS/PhD)
+
+Job:
+- jobId
+- companyId
+- title
+- description
+- location
+- salary range
+- job type (full/part/intern etc)
+- requiredSkills
+- requiredEducation
+- postedDate
+- status (active/closed)
+
+Skill:
+- skillId
+- skillName
+- category (technical/soft etc)
+
+Quiz:
+- quizId
+- jobId
+- companyId
+- title
+- duration
+- passingScore
+- createdDate
+- List<Questions>
+
+Questions:
+- questionId
+- questionText
+- optionA
+- optionB
+- optionC
+- optionD
+- correctAnswer
+
+QuizAttempt:
+- attemptId
+- quizId
+- seekerId
+- score 
+- attemptDate
+- isPassed
+- timeTaken
+
+Application:
+- applicationId
+- jobId
+- seekerId
+- appliedDate
+- status (pending/reviewed/shortlisted/rejected)
+
+
+---
+
+Required fuctions for each:
+---
+constructor
+fromJson
+toJson
+toString
+---
+
+
+Next target:
+- DBLayer for each (using Hive)

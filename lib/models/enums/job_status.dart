@@ -1,0 +1,1 @@
+enum JobStatus { active, closed }

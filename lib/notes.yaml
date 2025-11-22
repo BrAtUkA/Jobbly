@@ -1,0 +1,17 @@
+Omissions:
+# Skill levels removed from app (not needed)
+
+
+Issues Fixed:
+# Fixed: Seeker side logout issue
+# Fixed: Email already exists error on signup - now checks if identities is empty
+# Fixed: Double ticks around skill tags - removed extra check icon from FilterChip label
+
+
+TODO:
+- Complete any remaining Seeker side UI refinements
+- Implement settings screen (if needed)
+
+
+- First signup, logout bug
+- resume / info not showing in application details on the company side // DONE

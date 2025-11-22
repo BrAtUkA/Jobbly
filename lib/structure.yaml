@@ -1,0 +1,129 @@
+# Employee Hiring Platform - Database Structure
+# Finalized Schema for Flutter Application
+
+User:
+  - userId
+  - email
+  - password
+  - userType (enum: company/seeker)
+  - createdAt (DateTime)
+
+Company extends User:
+  - companyId
+  - companyName
+  - description
+  - logoUrl (nullable)
+  - website (nullable)
+  - contactNo
+
+Seeker extends User:
+  - seekerId
+  - fullName
+  - pfp (nullable)
+  - resumeUrl (nullable)
+  - experience (nullable)
+  - education (enum: Matric/Inter/BS/MS/PhD)
+  - phone (nullable)
+  - location (nullable)
+
+Job:
+  - jobId
+  - companyId
+  - title
+  - description
+  - location
+  - minSalary (nullable)
+  - maxSalary (nullable)
+  - jobType (enum: full-time/part-time/internship/contract)
+  - requiredEducation (enum)
+  - postedDate (DateTime)
+  - status (enum: active/closed)
+
+Skill:
+  - skillId
+  - skillName
+  - category (enum: technical/soft/other)
+
+SeekerSkill:
+  - seekerId (FK to Seeker)
+  - skillId (FK to Skill)
+
+JobSkill:
+  - jobId (FK to Job)
+  - skillId (FK to Skill)
+
+Quiz:
+  - quizId
+  - jobId (FK to Job)
+  - companyId (FK to Company)
+  - title
+  - duration (in minutes)
+  - passingScore
+  - createdDate (DateTime)
+  - questions (List<Question>)
+
+Question:
+  - questionId
+  - questionText
+  - optionA
+  - optionB
+  - optionC
+  - optionD
+  - correctAnswer (A/B/C/D)
+
+QuizAttempt:
+  - attemptId
+  - quizId (FK to Quiz)
+  - seekerId (FK to Seeker)
+  - score
+  - attemptDate (DateTime)
+  - isPassed (boolean)
+  - timeTaken (in minutes)
+
+Application:
+  - applicationId
+  - jobId (FK to Job)
+  - seekerId (FK to Seeker)
+  - quizAttemptId (nullable, FK to QuizAttempt)
+  - appliedDate (DateTime)
+  - status (enum: pending/reviewed/shortlisted/rejected)
+
+# Relationships:
+# 1. Company → Job (1:N)
+# 2. Company → Quiz (1:N)
+# 3. Job → Quiz (1:N)
+# 4. Job ↔ Skill (N:M via JobSkill)
+# 5. Seeker ↔ Skill (N:M via SeekerSkill)
+# 6. Seeker → Application (1:N)
+# 7. Seeker → QuizAttempt (1:N)
+# 8. Application → QuizAttempt (1:1 optional)
+# ✅ STATUS: All model classes updated successfully!
+
+# Model Features Implemented:
+# - Constructor with required and optional parameters
+# - toJson() method for database serialization (renamed from toMap)
+# - fromJson() factory constructor for deserialization (renamed from fromMap)
+# - toString() method for easy debugging
+# - Mutable fields (no 'final' keyword) for simple direct updates
+# - Type-safe enums for all categorical fields
+# - NO copyWith() - fields are mutable, just update directly!
+
+# Location: lib/models/
+# All models can be imported via: import 'package:project/models/models.dart';
+
+# Usage Example:
+# Company company = Company(...);
+# company.companyName = 'New Name';  // Direct update!
+# String json = jsonEncode(company.toJson());  // Serialize
+# Company loaded = Company.fromJson(jsonDecode(json));  // Deserialize
+# print(company);  // Use toString for debugging
+
+# Next Steps:
+# 1. Choose database solution (Firebase Firestore recommended for semester project)
+# 2. Implement authentication (Firebase Auth)
+# 3. Create repository/service layer for CRUD operations
+# 4. Build UI screens
+# 5. Implement business logic
+
+
+
